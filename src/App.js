@@ -1,16 +1,45 @@
 import React, { useState } from "react";
 
 const menuDrinks = [
-  { id: 1, name: "Cà phê đen", price: 15000 },
-  { id: 2, name: "Cà phê sữa", price: 20000 },
-  { id: 3, name: "Trà đá", price: 10000 },
-  { id: 4, name: "Nước cam", price: 25000 },
+  // CÀ PHÊ
+  { id: 1, name: "Coffe đá", price: 15000, category: "Cà phê" },
+  { id: 2, name: "Coffe Sữa", price: 18000, category: "Cà phê" },
+  { id: 3, name: "Coffe Sữa tươi", price: 18000, category: "Cà phê" },
+  { id: 4, name: "Bạc xỉu", price: 20000, category: "Cà phê" },
+  { id: 5, name: "Coffe kem muối", price: 20000, category: "Cà phê" },
+  { id: 6, name: "Coffe sữa tươi sương sáo", price: 22000, category: "Cà phê" },
+  { id: 7, name: "Bạc xỉu cốt dừa", price: 22000, category: "Cà phê" },
+
+  // TRÀ TRÁI CÂY
+  { id: 8, name: "Trà Tắc Thái xanh", price: 15000, category: "Trà trái cây" },
+  { id: 9, name: "Trà xoài", price: 20000, category: "Trà trái cây" },
+  { id: 10, name: "Trà xoài chanh dây", price: 20000, category: "Trà trái cây" },
+  { id: 11, name: "Trà ổi hồng", price: 20000, category: "Trà trái cây" },
+  { id: 12, name: "Trà dưa lưới", price: 25000, category: "Trà trái cây" },
+  { id: 13, name: "Trà lài đất thơm", price: 25000, category: "Trà trái cây" },
+  { id: 14, name: "Trà trái cây nhiệt đới", price: 25000, category: "Trà trái cây" },
+
+  // LATTE
+  { id: 15, name: "Matcha lattee (M)", price: 20000, category: "Latte" },
+  { id: 16, name: "Khoai môn lattee (M)", price: 20000, category: "Latte" },
+  { id: 17, name: "Cacao lattee (M)", price: 20000, category: "Latte" },
+  { id: 18, name: "Tàu phớ", price: 20000, category: "Latte" },
+  { id: 19, name: "Matcha lattee (L)", price: 25000, category: "Latte" },
+
+  // BEST SELLER
+  { id: 20, name: "Sữa Hồng machiato (M)", price: 25000, category: "Best Seller" },
+  { id: 21, name: "Sữa Hồng machiato (L)", price: 30000, category: "Best Seller" },
 ];
+const groupedMenu = menuDrinks.reduce((acc, item) => {
+  if (!acc[item.category]) acc[item.category] = [];
+  acc[item.category].push(item);
+  return acc;
+}, {});
+
 
 export default function DrinkOrderApp() {
   const [order, setOrder] = useState([]);
   const [ordersList, setOrdersList] = useState([]); // danh sách đơn đã ra
-  const [orderCreated, setOrderCreated] = useState(false);
 
   const addToOrder = (drink) => {
     const exist = order.find((item) => item.id === drink.id);
@@ -47,7 +76,6 @@ export default function DrinkOrderApp() {
     };
     setOrdersList([...ordersList, newOrder]);
     setOrder([]); // reset giỏ hàng
-    setOrderCreated(true);
   };
 
   // Thanh toán đơn
@@ -198,27 +226,35 @@ export default function DrinkOrderApp() {
     <div style={styles.container}>
       <h2 style={styles.title}>Menu Nước</h2>
       <div>
-        {menuDrinks.map((drink) => (
-          <div key={drink.id} style={styles.menuItem}>
-            <div>
-              <span style={{ fontWeight: 600 }}>{drink.name}</span> -{" "}
-              {drink.price.toLocaleString()}₫
-            </div>
-            <button
-              style={styles.btnAdd}
-              onClick={() => addToOrder(drink)}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.backgroundColor = "#218838")
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.backgroundColor = "#28a745")
-              }
-            >
-              Thêm
-            </button>
+        {Object.keys(groupedMenu).map((category) => (
+          <div key={category}>
+            <h3 style={{ ...styles.title, fontSize: 18, textAlign: "left", marginTop: 30 }}>
+              {category}
+            </h3>
+            {groupedMenu[category].map((drink) => (
+              <div key={drink.id} style={styles.menuItem}>
+                <div>
+                  <span style={{ fontWeight: 600 }}>{drink.name}</span> -{" "}
+                  {drink.price.toLocaleString()}₫
+                </div>
+                <button
+                  style={styles.btnAdd}
+                  onClick={() => addToOrder(drink)}
+                  onMouseEnter={(e) =>
+                    (e.currentTarget.style.backgroundColor = "#218838")
+                  }
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.backgroundColor = "#28a745")
+                  }
+                >
+                  Thêm
+                </button>
+              </div>
+            ))}
           </div>
         ))}
       </div>
+
 
       <h2 style={{ ...styles.title, marginTop: 40 }}>Giỏ hàng</h2>
       {order.length === 0 && (
